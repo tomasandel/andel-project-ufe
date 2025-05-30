@@ -20,7 +20,7 @@ export class AndelProjectQDetail {
 render() {
   return (
     <Host>
-      <md-filled-text-field label="Meno a Priezvisko" >
+      <md-filled-text-field label="Meno a Priezviskos" >
         <md-icon slot="leading-icon">person</md-icon>
       </md-filled-text-field>
 
