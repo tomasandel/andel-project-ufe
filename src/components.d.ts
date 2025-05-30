@@ -6,13 +6,61 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AndelProjectQApp {
+        "basePath": string;
+    }
+    interface AndelProjectQDetail {
+        "entryId": string;
+    }
     interface AndelProjectQList {
     }
     interface MyComponent {
     }
 }
+export interface AndelProjectQDetailCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAndelProjectQDetailElement;
+}
+export interface AndelProjectQListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAndelProjectQListElement;
+}
 declare global {
+    interface HTMLAndelProjectQAppElement extends Components.AndelProjectQApp, HTMLStencilElement {
+    }
+    var HTMLAndelProjectQAppElement: {
+        prototype: HTMLAndelProjectQAppElement;
+        new (): HTMLAndelProjectQAppElement;
+    };
+    interface HTMLAndelProjectQDetailElementEventMap {
+        "editor-closed": string;
+    }
+    interface HTMLAndelProjectQDetailElement extends Components.AndelProjectQDetail, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAndelProjectQDetailElementEventMap>(type: K, listener: (this: HTMLAndelProjectQDetailElement, ev: AndelProjectQDetailCustomEvent<HTMLAndelProjectQDetailElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAndelProjectQDetailElementEventMap>(type: K, listener: (this: HTMLAndelProjectQDetailElement, ev: AndelProjectQDetailCustomEvent<HTMLAndelProjectQDetailElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAndelProjectQDetailElement: {
+        prototype: HTMLAndelProjectQDetailElement;
+        new (): HTMLAndelProjectQDetailElement;
+    };
+    interface HTMLAndelProjectQListElementEventMap {
+        "entry-clicked": string;
+    }
     interface HTMLAndelProjectQListElement extends Components.AndelProjectQList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAndelProjectQListElementEventMap>(type: K, listener: (this: HTMLAndelProjectQListElement, ev: AndelProjectQListCustomEvent<HTMLAndelProjectQListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAndelProjectQListElementEventMap>(type: K, listener: (this: HTMLAndelProjectQListElement, ev: AndelProjectQListCustomEvent<HTMLAndelProjectQListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLAndelProjectQListElement: {
         prototype: HTMLAndelProjectQListElement;
@@ -25,16 +73,28 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "andel-project-q-app": HTMLAndelProjectQAppElement;
+        "andel-project-q-detail": HTMLAndelProjectQDetailElement;
         "andel-project-q-list": HTMLAndelProjectQListElement;
         "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface AndelProjectQApp {
+        "basePath"?: string;
+    }
+    interface AndelProjectQDetail {
+        "entryId"?: string;
+        "onEditor-closed"?: (event: AndelProjectQDetailCustomEvent<string>) => void;
+    }
     interface AndelProjectQList {
+        "onEntry-clicked"?: (event: AndelProjectQListCustomEvent<string>) => void;
     }
     interface MyComponent {
     }
     interface IntrinsicElements {
+        "andel-project-q-app": AndelProjectQApp;
+        "andel-project-q-detail": AndelProjectQDetail;
         "andel-project-q-list": AndelProjectQList;
         "my-component": MyComponent;
     }
@@ -43,6 +103,8 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "andel-project-q-app": LocalJSX.AndelProjectQApp & JSXBase.HTMLAttributes<HTMLAndelProjectQAppElement>;
+            "andel-project-q-detail": LocalJSX.AndelProjectQDetail & JSXBase.HTMLAttributes<HTMLAndelProjectQDetailElement>;
             "andel-project-q-list": LocalJSX.AndelProjectQList & JSXBase.HTMLAttributes<HTMLAndelProjectQListElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }

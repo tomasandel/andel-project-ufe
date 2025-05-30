@@ -1,7 +1,4 @@
-import { Component, Host, h } from '@stencil/core';
-import '@material/web/list/list'
-import '@material/web/list/list-item'
-import '@material/web/icon/icon'
+import { Component, Event, EventEmitter,  Host, h } from '@stencil/core';
 
 @Component({
   tag: 'andel-project-q-list',
@@ -9,6 +6,7 @@ import '@material/web/icon/icon'
   shadow: true,
 })
 export class AndelProjectQList {
+  @Event({ eventName: "entry-clicked"}) entryClicked: EventEmitter<string>;
   waitingPatients: any[];
 
   private async getWaitingPatientsAsync(){
@@ -52,8 +50,8 @@ export class AndelProjectQList {
     return (
       <Host>
         <md-list>
-          {this.waitingPatients.map(patient =>
-            <md-list-item>
+          {this.waitingPatients.map((patient, index) =>
+            <md-list-item onClick={ () => this.entryClicked.emit(index.toString())}>
               <div slot="headline">{patient.name}</div>
               <div slot="supporting-text">{"Dátum úpravy: " + patient.lastModified?.toLocaleString()}</div>
                 <md-icon slot="start">person</md-icon>
