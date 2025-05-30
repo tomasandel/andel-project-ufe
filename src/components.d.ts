@@ -6,10 +6,18 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AndelProjectQList {
+    }
     interface MyComponent {
     }
 }
 declare global {
+    interface HTMLAndelProjectQListElement extends Components.AndelProjectQList, HTMLStencilElement {
+    }
+    var HTMLAndelProjectQListElement: {
+        prototype: HTMLAndelProjectQListElement;
+        new (): HTMLAndelProjectQListElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
@@ -17,13 +25,17 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "andel-project-q-list": HTMLAndelProjectQListElement;
         "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface AndelProjectQList {
+    }
     interface MyComponent {
     }
     interface IntrinsicElements {
+        "andel-project-q-list": AndelProjectQList;
         "my-component": MyComponent;
     }
 }
@@ -31,6 +43,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "andel-project-q-list": LocalJSX.AndelProjectQList & JSXBase.HTMLAttributes<HTMLAndelProjectQListElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }
