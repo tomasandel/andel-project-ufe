@@ -7,12 +7,16 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface AndelProjectQApp {
+        "ambulanceId": string;
+        "apiBase": string;
         "basePath": string;
     }
     interface AndelProjectQDetail {
         "entryId": string;
     }
     interface AndelProjectQList {
+        "ambulanceId": string;
+        "apiBase": string;
     }
     interface MyComponent {
     }
@@ -81,6 +85,8 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AndelProjectQApp {
+        "ambulanceId"?: string;
+        "apiBase"?: string;
         "basePath"?: string;
     }
     interface AndelProjectQDetail {
@@ -88,6 +94,8 @@ declare namespace LocalJSX {
         "onEditor-closed"?: (event: AndelProjectQDetailCustomEvent<string>) => void;
     }
     interface AndelProjectQList {
+        "ambulanceId"?: string;
+        "apiBase"?: string;
         "onEntry-clicked"?: (event: AndelProjectQListCustomEvent<string>) => void;
     }
     interface MyComponent {

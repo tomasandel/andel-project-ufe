@@ -1,0 +1,122 @@
+openapi: 3.0.0
+servers:
+  - description: Cluster Endpoint
+    url: /api
+info:
+  description: Patient questionnaire management for Web-In-Cloud system
+  version: "1.0.0"
+  title: Questionnaire Api
+  contact:
+    email: xandelt1@stuba.sk
+  license:
+    name: CC BY 4.0
+    url: "https://creativecommons.org/licenses/by/4.0/"
+tags:
+- name: questionnaire
+  description: Questionnare API
+
+paths:
+  "/questionnaire/{ambulanceId}/entries":
+    get:
+      tags: [questionnaire]
+      summary: Provides the ambulance questionnaire entries
+      operationId: getQuestionnaireEntries
+      parameters:
+        - in: path
+          name: ambulanceId
+          required: true
+          description: ID ambulancie
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Zoznam dotazníkov pre danú ambulanciu
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Questionnaire'
+              examples:
+                default:
+                  $ref: '#/components/examples/QuestionnaireArrayExample'
+        "404":
+          description: Ambulancia s takým ID neexistuje
+
+
+components:
+  schemas:
+    Questionnaire:
+      type: object
+      required: [id, name, patientId, lastModified, questions]
+      properties:
+        id:
+          type: string
+          description: Unique questionnaire entry ID
+          example: x321ab3
+        name:
+          type: string
+          description: Patient’s full name
+          example: Jožko Púčik
+        patientId:
+          type: string
+          description: Patient identifier in Web-In-Cloud system
+          example: 460527-jozef-pucik
+        lastModified:
+          type: string
+          format: date-time
+          description: Last modification timestamp (ISO 8601)
+          example: "2038-12-24T10:05:00Z"
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionnaireQuestion'
+
+    QuestionnaireQuestion:
+      type: object
+      required: [id, answer]
+      properties:
+        id:
+          type: string
+          description: Question ID
+          example: q1
+        answer:
+          type: string
+          description: Answer text
+          example: "Áno"
+
+  examples:
+    QuestionnaireExample:
+      summary: Jeden dotazník
+      value:
+        id: x321ab3
+        name: "Jožko Púčik"
+        patientId: "460527-jozef-pucik"
+        lastModified: "2038-12-24T10:05:00Z"
+        questions:
+          - id: q1
+            answer: "Áno"
+          - id: q2
+            answer: "Nie"
+
+    QuestionnaireArrayExample:
+      summary: Zoznam dvoch dotazníkov
+      value:
+        - id: x321ab3
+          name: "Jožko Púčik"
+          patientId: "460527-jozef-pucik"
+          lastModified: "2038-12-24T10:05:00Z"
+          questions:
+            - id: q1
+              answer: "Áno"
+            - id: q2
+              answer: "Nie"
+        - id: x321abb4
+          name: "August Cézar"
+          patientId: "500110-august-cezar"
+          lastModified: "2038-12-24T11:00:00Z"
+          questions:
+            - id: q1
+              answer: "Áno"
+            - id: q2
+              answer: "Nie"

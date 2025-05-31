@@ -1,4 +1,5 @@
-import { Component, Event, EventEmitter,  Host, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Host, Prop, State, h } from '@stencil/core';
+import { QuestionnaireApi, Questionnaire, Configuration } from '../../api/ambulance-wl';
 
 @Component({
   tag: 'andel-project-q-list',
@@ -7,57 +8,52 @@ import { Component, Event, EventEmitter,  Host, h } from '@stencil/core';
 })
 export class AndelProjectQList {
   @Event({ eventName: "entry-clicked"}) entryClicked: EventEmitter<string>;
-  waitingPatients: any[];
 
-  private async getWaitingPatientsAsync(){
-    return await Promise.resolve(
-      [{
-          name: 'Jožko Púčik',
-          patientId: '10001',
-          lastModified: new Date(Date.now()),
-          questions: [
-            { questionId: '1', answer: 'Áno' },
-            { questionId: '2', answer: 'Nie' },
-            { questionId: '3', answer: 'Áno' },
-          ]
-      }, {
-          name: 'Bc. August Cézar',
-          patientId: '10096',
-          lastModified: new Date(Date.now()),
-          questions: [
-            { questionId: '1', answer: 'Áno' },
-            { questionId: '2', answer: 'Nie' },
-            { questionId: '3', answer: 'Áno' },
-          ]
-      }, {
-          name: 'Ing. Ferdinand Trety',
-          patientId: '10028',
-          lastModified: new Date(Date.now()),
-          questions: [
-            { questionId: '1', answer: 'Áno' },
-            { questionId: '2', answer: 'Nie' },
-            { questionId: '3', answer: 'Áno' },
-          ]
-      }]
-    );
+  @Prop() apiBase: string;
+  @Prop() ambulanceId: string;
+  @State() errorMessage: string;
+
+  questionnaires: Questionnaire[];
+
+  private async getQuestionnairesAsync(): Promise<Questionnaire[]> {
+    try {
+      const configuration = new Configuration({
+        basePath: this.apiBase,
+      });
+
+      const questionnaireApi = new QuestionnaireApi(configuration);
+      const response = await questionnaireApi.getQuestionnaireEntriesRaw({ambulanceId: this.ambulanceId})
+      if (response.raw.status < 299) {
+        return await response.value();
+      } else {
+        this.errorMessage = `Cannot retrieve questionnaires: ${response.raw.statusText}`
+      }
+    } catch (err: any) {
+      this.errorMessage = `Cannot retrieve questionnaires: ${err.message || "unknown"}`
+    }
+    return [];
   }
 
   async componentWillLoad() {
-    this.waitingPatients = await this.getWaitingPatientsAsync();
+    this.questionnaires = await this.getQuestionnairesAsync();
   }
 
   render() {
     return (
       <Host>
+        {this.errorMessage
+        ? <div class="error">{this.errorMessage}</div>
+        :
         <md-list>
-          {this.waitingPatients.map((patient, index) =>
-            <md-list-item onClick={ () => this.entryClicked.emit(index.toString())}>
+            {this.questionnaires.map(patient =>
+            <md-list-item onClick={ () => this.entryClicked.emit(patient.id)} >
               <div slot="headline">{patient.name}</div>
               <div slot="supporting-text">{"Dátum úpravy: " + patient.lastModified?.toLocaleString()}</div>
                 <md-icon slot="start">person</md-icon>
             </md-list-item>
           )}
         </md-list>
+      }
       </Host>
     );
   }
