@@ -13,13 +13,6 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { QuestionnaireQuestion } from './QuestionnaireQuestion';
-import {
-    QuestionnaireQuestionFromJSON,
-    QuestionnaireQuestionFromJSONTyped,
-    QuestionnaireQuestionToJSON,
-} from './QuestionnaireQuestion';
-
 /**
  * 
  * @export
@@ -51,11 +44,11 @@ export interface Questionnaire {
      */
     lastModified: Date;
     /**
-     * 
-     * @type {Array<QuestionnaireQuestion>}
+     * Odpovede na otázky v pevne danom poradí (index 0 – 7)
+     * @type {Array<string>}
      * @memberof Questionnaire
      */
-    questions: Array<QuestionnaireQuestion>;
+    questions: Array<string>;
 }
 
 /**
@@ -86,7 +79,7 @@ export function QuestionnaireFromJSONTyped(json: any, ignoreDiscriminator: boole
         'name': json['name'],
         'patientId': json['patientId'],
         'lastModified': (new Date(json['lastModified'])),
-        'questions': ((json['questions'] as Array<any>).map(QuestionnaireQuestionFromJSON)),
+        'questions': json['questions'],
     };
 }
 
@@ -103,7 +96,7 @@ export function QuestionnaireToJSON(value?: Questionnaire | null): any {
         'name': value.name,
         'patientId': value.patientId,
         'lastModified': (value.lastModified.toISOString()),
-        'questions': ((value.questions as Array<any>).map(QuestionnaireQuestionToJSON)),
+        'questions': value.questions,
     };
 }
 

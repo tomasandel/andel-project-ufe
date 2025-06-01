@@ -45,8 +45,8 @@ export class AndelProjectQList {
         ? <div class="error">{this.errorMessage}</div>
         :
         <md-list>
-            {this.questionnaires.map(patient =>
-            <md-list-item onClick={ () => this.entryClicked.emit(patient.id)} >
+            {this.questionnaires.map((patient) =>
+            <md-list-item onClick={ () => this.entryClicked.emit(patient.id)}>
               <div slot="headline">{patient.name}</div>
               <div slot="supporting-text">{"Dátum úpravy: " + patient.lastModified?.toLocaleString()}</div>
                 <md-icon slot="start">person</md-icon>

@@ -12,8 +12,8 @@ info:
     name: CC BY 4.0
     url: "https://creativecommons.org/licenses/by/4.0/"
 tags:
-- name: questionnaire
-  description: Questionnare API
+  - name: questionnaire
+    description: Questionnare API
 
 paths:
   "/questionnaire/{ambulanceId}/entries":
@@ -36,13 +36,95 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Questionnaire'
+                  $ref: "#/components/schemas/Questionnaire"
               examples:
                 default:
-                  $ref: '#/components/examples/QuestionnaireArrayExample'
+                  $ref: "#/components/examples/QuestionnaireArrayExample"
         "404":
           description: Ambulancia s takým ID neexistuje
 
+  "/questionnaire/{ambulanceId}/entries/{entryId}":
+    get:
+      tags: [questionnaire]
+      summary: Poskytne detail konkrétneho dotazníka
+      operationId: getQuestionnaireEntry
+      parameters:
+        - in: path
+          name: ambulanceId
+          required: true
+          schema: { type: string }
+        - in: path
+          name: entryId
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Detail dotazníka
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Questionnaire"
+              examples:
+                response:
+                  $ref: "#/components/examples/QuestionnaireExample"
+        "404":
+          description: Ambulancia alebo dotazník s takým ID neexistuje
+
+    put:
+      tags: [questionnaire]
+      summary: Aktualizuje konkrétny dotazník
+      operationId: updateQuestionnaireEntry
+      parameters:
+        - in: path
+          name: ambulanceId
+          required: true
+          schema: { type: string }
+        - in: path
+          name: entryId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Questionnaire"
+            examples:
+              request:
+                $ref: "#/components/examples/QuestionnaireExample"
+      responses:
+        "200":
+          description: Aktualizovaný dotazník
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Questionnaire"
+              examples:
+                response:
+                  $ref: "#/components/examples/QuestionnaireExample"
+        "403":
+          description: entryId v URL a v tele požiadavky nesúhlasia
+        "404":
+          description: Ambulancia alebo dotazník s takým ID neexistuje
+
+    delete:
+      tags: [questionnaire]
+      summary: Odstráni konkrétny dotazník
+      operationId: deleteQuestionnaireEntry
+      parameters:
+        - in: path
+          name: ambulanceId
+          required: true
+          schema: { type: string }
+        - in: path
+          name: entryId
+          required: true
+          schema: { type: string }
+      responses:
+        "204":
+          description: Dotazník odstránený
+        "404":
+          description: Ambulancia alebo dotazník s takým ID neexistuje
 
 components:
   schemas:
@@ -69,21 +151,18 @@ components:
           example: "2038-12-24T10:05:00Z"
         questions:
           type: array
+          description: Odpovede na otázky v pevne danom poradí (index 0 – 7)
           items:
-            $ref: '#/components/schemas/QuestionnaireQuestion'
-
-    QuestionnaireQuestion:
-      type: object
-      required: [id, answer]
-      properties:
-        id:
-          type: string
-          description: Question ID
-          example: q1
-        answer:
-          type: string
-          description: Answer text
-          example: "Áno"
+            type: string
+          example:
+            - "Žiadne"
+            - "Nie"
+            - "Chronická nádcha"
+            - "Nie"
+            - "Nie"
+            - "Áno, ale len občas"
+            - "Fyzioterapia a masáže"
+            - "Nie"
 
   examples:
     QuestionnaireExample:
@@ -94,29 +173,41 @@ components:
         patientId: "460527-jozef-pucik"
         lastModified: "2038-12-24T10:05:00Z"
         questions:
-          - id: q1
-            answer: "Áno"
-          - id: q2
-            answer: "Nie"
+          - "Žiadne"
+          - "Nie"
+          - "Chronická nádcha"
+          - "Nie"
+          - "Nie"
+          - "Áno, ale len občas"
+          - "Fyzioterapia a masáže"
+          - "Nie"
 
     QuestionnaireArrayExample:
       summary: Zoznam dvoch dotazníkov
       value:
-        - id: x321ab3
+        - id: 0
           name: "Jožko Púčik"
           patientId: "460527-jozef-pucik"
           lastModified: "2038-12-24T10:05:00Z"
           questions:
-            - id: q1
-              answer: "Áno"
-            - id: q2
-              answer: "Nie"
-        - id: x321abb4
+            - "Žiadne"
+            - "Nie"
+            - "Chronická nádcha"
+            - "Nie"
+            - "Nie"
+            - "Áno, ale len občas"
+            - "Fyzioterapia a masáže"
+            - "Nie"
+        - id: 1
           name: "August Cézar"
           patientId: "500110-august-cezar"
           lastModified: "2038-12-24T11:00:00Z"
           questions:
-            - id: q1
-              answer: "Áno"
-            - id: q2
-              answer: "Nie"
+            - "Žiadne"
+            - "Nie"
+            - "Chronická nádcha"
+            - "Nie"
+            - "Nie"
+            - "Áno, ale len občas"
+            - "Fyzioterapia a masáže"
+            - "Nie"

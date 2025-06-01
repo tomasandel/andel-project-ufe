@@ -22,8 +22,24 @@ import {
     QuestionnaireToJSON,
 } from '../models';
 
+export interface DeleteQuestionnaireEntryRequest {
+    ambulanceId: string;
+    entryId: string;
+}
+
 export interface GetQuestionnaireEntriesRequest {
     ambulanceId: string;
+}
+
+export interface GetQuestionnaireEntryRequest {
+    ambulanceId: string;
+    entryId: string;
+}
+
+export interface UpdateQuestionnaireEntryRequest {
+    ambulanceId: string;
+    entryId: string;
+    questionnaire: Questionnaire;
 }
 
 /**
@@ -33,6 +49,22 @@ export interface GetQuestionnaireEntriesRequest {
  * @interface QuestionnaireApiInterface
  */
 export interface QuestionnaireApiInterface {
+    /**
+     *
+     * @summary Odstráni konkrétny dotazník
+     * @param {string} ambulanceId
+     * @param {string} entryId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof QuestionnaireApiInterface
+     */
+    deleteQuestionnaireEntryRaw(requestParameters: DeleteQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Odstráni konkrétny dotazník
+     */
+    deleteQuestionnaireEntry(requestParameters: DeleteQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
+
     /**
      *
      * @summary Provides the ambulance questionnaire entries
@@ -48,6 +80,39 @@ export interface QuestionnaireApiInterface {
      */
     getQuestionnaireEntries(requestParameters: GetQuestionnaireEntriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Questionnaire>>;
 
+    /**
+     *
+     * @summary Poskytne detail konkrétneho dotazníka
+     * @param {string} ambulanceId
+     * @param {string} entryId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof QuestionnaireApiInterface
+     */
+    getQuestionnaireEntryRaw(requestParameters: GetQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Questionnaire>>;
+
+    /**
+     * Poskytne detail konkrétneho dotazníka
+     */
+    getQuestionnaireEntry(requestParameters: GetQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Questionnaire>;
+
+    /**
+     *
+     * @summary Aktualizuje konkrétny dotazník
+     * @param {string} ambulanceId
+     * @param {string} entryId
+     * @param {Questionnaire} questionnaire
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof QuestionnaireApiInterface
+     */
+    updateQuestionnaireEntryRaw(requestParameters: UpdateQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Questionnaire>>;
+
+    /**
+     * Aktualizuje konkrétny dotazník
+     */
+    updateQuestionnaireEntry(requestParameters: UpdateQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Questionnaire>;
+
 }
 
 /**
@@ -56,10 +121,42 @@ export interface QuestionnaireApiInterface {
 export class QuestionnaireApi extends runtime.BaseAPI implements QuestionnaireApiInterface {
 
     /**
+     * Odstráni konkrétny dotazník
+     */
+    async deleteQuestionnaireEntryRaw(requestParameters: DeleteQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.ambulanceId === null || requestParameters.ambulanceId === undefined) {
+            throw new runtime.RequiredError('ambulanceId','Required parameter requestParameters.ambulanceId was null or undefined when calling deleteQuestionnaireEntry.');
+        }
+
+        if (requestParameters.entryId === null || requestParameters.entryId === undefined) {
+            throw new runtime.RequiredError('entryId','Required parameter requestParameters.entryId was null or undefined when calling deleteQuestionnaireEntry.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/questionnaire/{ambulanceId}/entries/{entryId}`.replace(`{${"ambulanceId"}}`, encodeURIComponent(String(requestParameters.ambulanceId))).replace(`{${"entryId"}}`, encodeURIComponent(String(requestParameters.entryId))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Odstráni konkrétny dotazník
+     */
+    async deleteQuestionnaireEntry(requestParameters: DeleteQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteQuestionnaireEntryRaw(requestParameters, initOverrides);
+    }
+
+    /**
      * Provides the ambulance questionnaire entries
      */
     async getQuestionnaireEntriesRaw(requestParameters: GetQuestionnaireEntriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Questionnaire>>> {
-      console.log("getQuestionnaireEntriesRaw called with parameters: ", requestParameters);
         if (requestParameters.ambulanceId === null || requestParameters.ambulanceId === undefined) {
             throw new runtime.RequiredError('ambulanceId','Required parameter requestParameters.ambulanceId was null or undefined when calling getQuestionnaireEntries.');
         }
@@ -83,6 +180,81 @@ export class QuestionnaireApi extends runtime.BaseAPI implements QuestionnaireAp
      */
     async getQuestionnaireEntries(requestParameters: GetQuestionnaireEntriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Questionnaire>> {
         const response = await this.getQuestionnaireEntriesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Poskytne detail konkrétneho dotazníka
+     */
+    async getQuestionnaireEntryRaw(requestParameters: GetQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Questionnaire>> {
+        if (requestParameters.ambulanceId === null || requestParameters.ambulanceId === undefined) {
+            throw new runtime.RequiredError('ambulanceId','Required parameter requestParameters.ambulanceId was null or undefined when calling getQuestionnaireEntry.');
+        }
+
+        if (requestParameters.entryId === null || requestParameters.entryId === undefined) {
+            throw new runtime.RequiredError('entryId','Required parameter requestParameters.entryId was null or undefined when calling getQuestionnaireEntry.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/questionnaire/{ambulanceId}/entries/{entryId}`.replace(`{${"ambulanceId"}}`, encodeURIComponent(String(requestParameters.ambulanceId))).replace(`{${"entryId"}}`, encodeURIComponent(String(requestParameters.entryId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => QuestionnaireFromJSON(jsonValue));
+    }
+
+    /**
+     * Poskytne detail konkrétneho dotazníka
+     */
+    async getQuestionnaireEntry(requestParameters: GetQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Questionnaire> {
+        const response = await this.getQuestionnaireEntryRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Aktualizuje konkrétny dotazník
+     */
+    async updateQuestionnaireEntryRaw(requestParameters: UpdateQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Questionnaire>> {
+        if (requestParameters.ambulanceId === null || requestParameters.ambulanceId === undefined) {
+            throw new runtime.RequiredError('ambulanceId','Required parameter requestParameters.ambulanceId was null or undefined when calling updateQuestionnaireEntry.');
+        }
+
+        if (requestParameters.entryId === null || requestParameters.entryId === undefined) {
+            throw new runtime.RequiredError('entryId','Required parameter requestParameters.entryId was null or undefined when calling updateQuestionnaireEntry.');
+        }
+
+        if (requestParameters.questionnaire === null || requestParameters.questionnaire === undefined) {
+            throw new runtime.RequiredError('questionnaire','Required parameter requestParameters.questionnaire was null or undefined when calling updateQuestionnaireEntry.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/questionnaire/{ambulanceId}/entries/{entryId}`.replace(`{${"ambulanceId"}}`, encodeURIComponent(String(requestParameters.ambulanceId))).replace(`{${"entryId"}}`, encodeURIComponent(String(requestParameters.entryId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: QuestionnaireToJSON(requestParameters.questionnaire),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => QuestionnaireFromJSON(jsonValue));
+    }
+
+    /**
+     * Aktualizuje konkrétny dotazník
+     */
+    async updateQuestionnaireEntry(requestParameters: UpdateQuestionnaireEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Questionnaire> {
+        const response = await this.updateQuestionnaireEntryRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

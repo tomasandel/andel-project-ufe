@@ -21,10 +21,10 @@ import { exists, mapValues } from '../runtime';
 export interface QuestionnaireQuestion {
     /**
      * Question ID
-     * @type {string}
+     * @type {number}
      * @memberof QuestionnaireQuestion
      */
-    id: string;
+    id: number;
     /**
      * Answer text
      * @type {string}

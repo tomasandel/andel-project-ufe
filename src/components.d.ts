@@ -12,6 +12,8 @@ export namespace Components {
         "basePath": string;
     }
     interface AndelProjectQDetail {
+        "ambulanceId": string;
+        "apiBase": string;
         "entryId": string;
     }
     interface AndelProjectQList {
@@ -90,6 +92,8 @@ declare namespace LocalJSX {
         "basePath"?: string;
     }
     interface AndelProjectQDetail {
+        "ambulanceId"?: string;
+        "apiBase"?: string;
         "entryId"?: string;
         "onEditor-closed"?: (event: AndelProjectQDetailCustomEvent<string>) => void;
     }

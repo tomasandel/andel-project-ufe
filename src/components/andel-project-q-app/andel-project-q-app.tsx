@@ -55,6 +55,7 @@ render() {
     <Host>
       { element === "editor"
       ? <andel-project-q-detail entry-id={entryId}
+          ambulance-id={this.ambulanceId} api-base={this.apiBase}
           oneditor-closed={ () => navigate("./list")} >
         </andel-project-q-detail>
       : <andel-project-q-list  ambulance-id={this.ambulanceId} api-base={this.apiBase}
