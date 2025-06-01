@@ -21,3 +21,11 @@
   --md-filled-icon-button-container-size: 4rem;
   --md-filled-icon-button-icon-size: 3rem;
 }
+
+
+.no-entries {
+  text-align: center;
+  color: #666;
+  margin: 1rem 0;
+  font-style: italic;
+}

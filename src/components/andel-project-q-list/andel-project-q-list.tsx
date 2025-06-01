@@ -7,13 +7,13 @@ import { QuestionnaireApi, Questionnaire, Configuration } from '../../api/ambula
   shadow: true,
 })
 export class AndelProjectQList {
-  @Event({ eventName: "entry-clicked"}) entryClicked: EventEmitter<string>;
+  @Event({ eventName: 'entry-clicked' }) entryClicked: EventEmitter<string>;
 
   @Prop() apiBase: string;
   @Prop() ambulanceId: string;
   @State() errorMessage: string;
 
-  questionnaires: Questionnaire[];
+  questionnaires: Questionnaire[] = [];
 
   private async getQuestionnairesAsync(): Promise<Questionnaire[]> {
     try {
@@ -22,14 +22,14 @@ export class AndelProjectQList {
       });
 
       const questionnaireApi = new QuestionnaireApi(configuration);
-      const response = await questionnaireApi.getQuestionnaireEntriesRaw({ambulanceId: this.ambulanceId})
+      const response = await questionnaireApi.getQuestionnaireEntriesRaw({ ambulanceId: this.ambulanceId });
       if (response.raw.status < 299) {
         return await response.value();
       } else {
-        this.errorMessage = `Cannot retrieve questionnaires: ${response.raw.statusText}`
+        this.errorMessage = `Cannot retrieve questionnaires: ${response.raw.statusText}`;
       }
     } catch (err: any) {
-      this.errorMessage = `Cannot retrieve questionnaires: ${err.message || "unknown"}`
+      this.errorMessage = `Cannot retrieve questionnaires: ${err.message || 'unknown'}`;
     }
     return [];
   }
@@ -41,21 +41,25 @@ export class AndelProjectQList {
   render() {
     return (
       <Host>
-        {this.errorMessage
-        ? <div class="error">error: {this.errorMessage}</div>
-        :
-        <md-list>
-            {this.questionnaires.map((patient) =>
-            <md-list-item onClick={ () => this.entryClicked.emit(patient.id)}>
-              <div slot="headline">{patient.name}</div>
-              <div slot="supporting-text">{"Dátum úpravy: " + patient.lastModified?.toLocaleString()}</div>
+        {this.errorMessage ? (
+          <div class="error">error: {this.errorMessage}</div>
+        ) : this.questionnaires.length > 0 ? (
+          <md-list>
+            {this.questionnaires.map(patient => (
+              <md-list-item onClick={() => this.entryClicked.emit(patient.id)}>
+                <div slot="headline">{patient.name}</div>
+                <div slot="supporting-text">
+                  {'Dátum úpravy: ' + patient.lastModified?.toLocaleString()}
+                </div>
                 <md-icon slot="start">person</md-icon>
-            </md-list-item>
-          )}
-        </md-list>
-      }
-        <md-filled-icon-button class="add-button"
-          onclick={() => this.entryClicked.emit("@new")}>
+              </md-list-item>
+            ))}
+          </md-list>
+        ) : (
+          // Tu sa vypíše správa, keď nie sú žiadne záznamy
+          <div class="no-entries">Žiadne dotazníky</div>
+        )}
+        <md-filled-icon-button class="add-button" onClick={() => this.entryClicked.emit('@new')}>
           <md-icon>add</md-icon>
         </md-filled-icon-button>
       </Host>
