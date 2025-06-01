@@ -45,9 +45,9 @@ export class AndelProjectQDetail {
       basePath: this.apiBase,
       });
 
-      const waitingListApi = new QuestionnaireApi(configuration);
+      const questionnaireApi = new QuestionnaireApi(configuration);
 
-      const response = await waitingListApi.getQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, entryId: this.entryId});
+      const response = await questionnaireApi.getQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, entryId: this.entryId});
 
       if (response.raw.status < 299) {
           this.entry = await response.value();
@@ -266,14 +266,14 @@ export class AndelProjectQDetail {
         basePath: this.apiBase,
       });
 
-      const waitingListApi = new QuestionnaireApi(configuration);
+      const questionnaireApi = new QuestionnaireApi(configuration);
 
       const response = this.entryId == "@new" ?
-      await waitingListApi.createQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, questionnaire: this.entry}) :
-      await waitingListApi.updateQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, entryId: this.entryId, questionnaire: this.entry});
+      await questionnaireApi.createQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, questionnaire: this.entry}) :
+      await questionnaireApi.updateQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, entryId: this.entryId, questionnaire: this.entry});
 
       if (response.raw.status < 299) {
-        this.editorClosed.emit("store")
+        // this.editorClosed.emit("store")
       } else {
         this.errorMessage = `Cannot store entry: ${response.raw.statusText}`
       }
@@ -288,9 +288,9 @@ export class AndelProjectQDetail {
         basePath: this.apiBase,
       });
 
-      const waitingListApi = new QuestionnaireApi(configuration);
+      const questionnaireApi = new QuestionnaireApi(configuration);
 
-      const response = await waitingListApi.deleteQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, entryId: this.entryId});
+      const response = await questionnaireApi.deleteQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, entryId: this.entryId});
         if (response.raw.status < 299) {
         this.editorClosed.emit("delete")
         } else {
