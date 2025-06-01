@@ -17,6 +17,45 @@ tags:
 
 paths:
   "/questionnaire/{ambulanceId}/entries":
+    post:
+      tags: [questionnaire]
+      summary: Vytvorí nový dotazník pre danú ambulanciu
+      operationId: createQuestionnaireEntry
+      description: |
+        Pridá nový záznam dotazníka.
+      parameters:
+        - in: path
+          name: ambulanceId
+          required: true
+          description: ID ambulancie
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Questionnaire"
+            examples:
+              request:
+                $ref: "#/components/examples/QuestionnaireExample"
+      responses:
+        "201":
+          description: Dotazník úspešne vytvorený
+          headers:
+            Location:
+              description: URI nového zdroja
+              schema: { type: string }
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Questionnaire"
+              examples:
+                response:
+                  $ref: "#/components/examples/QuestionnaireExample"
+        "400":
+          description: Neplatné dáta v tele požiadavky
+        "404":
+          description: Ambulancia s takým ID neexistuje
     get:
       tags: [questionnaire]
       summary: Provides the ambulance questionnaire entries

@@ -24,6 +24,18 @@ export class AndelProjectQDetail {
   }
 
   private async getQuestionnaireEntry(): Promise<Questionnaire> {
+    if(this.entryId === "@new") {
+      this.isValid = false;
+      this.editing = true;
+      this.entry = {
+        id: "@new",
+        patientId: "",
+        name: "",
+        questions: Array(8).fill(""),
+        lastModified: new Date(Date.now()),
+      };
+      return this.entry;
+    }
     if ( !this.entryId ) {
       this.isValid = false;
       return undefined
@@ -87,9 +99,8 @@ export class AndelProjectQDetail {
 
         <md-divider></md-divider>
 
-        {/* 0 – lieky */}
         <div class="question">Aké lieky pravidelne užívate?</div>
-        <md-filled-text-field
+        <md-filled-text-field required
           disabled={disabled}
           value={this.entry?.questions?.[0] ?? ''}
           oninput={(ev: InputEvent) => {
@@ -99,9 +110,8 @@ export class AndelProjectQDetail {
           <md-icon slot="leading-icon">medication</md-icon>
         </md-filled-text-field>
 
-        {/* 1 – alergie */}
         <div class="question">Máte nejaké alergie?</div>
-        <md-filled-text-field
+        <md-filled-text-field required
           disabled={disabled}
           value={this.entry?.questions?.[1] ?? ''}
           oninput={(ev: InputEvent) => {
@@ -111,9 +121,8 @@ export class AndelProjectQDetail {
           <md-icon slot="leading-icon">healing</md-icon>
         </md-filled-text-field>
 
-        {/* 2 – chronické ochorenia */}
         <div class="question">Trpíte na chronické ochorenia (napr. cukrovka, vysoký tlak, astma)?</div>
-        <md-filled-text-field
+        <md-filled-text-field required
           disabled={disabled}
           value={this.entry?.questions?.[2] ?? ''}
           oninput={(ev: InputEvent) => {
@@ -123,9 +132,8 @@ export class AndelProjectQDetail {
           <md-icon slot="leading-icon">warning</md-icon>
         </md-filled-text-field>
 
-        {/* 3 – rodinná anamnéza */}
         <div class="question">Vyskytujú sa vo vašej rodine závažné ochorenia (napr. srdcovo-cievne, rakovina)?</div>
-        <md-filled-text-field
+        <md-filled-text-field required
           disabled={disabled}
           value={this.entry?.questions?.[3] ?? ''}
           oninput={(ev: InputEvent) => {
@@ -135,9 +143,8 @@ export class AndelProjectQDetail {
           <md-icon slot="leading-icon">family_restroom</md-icon>
         </md-filled-text-field>
 
-        {/* 4 – fajčenie */}
         <div class="question">Fajčíte alebo ste niekedy fajčili?</div>
-        <md-filled-text-field
+        <md-filled-text-field required
           disabled={disabled}
           value={this.entry?.questions?.[4] ?? ''}
           oninput={(ev: InputEvent) => {
@@ -147,9 +154,8 @@ export class AndelProjectQDetail {
           <md-icon slot="leading-icon">smoking_rooms</md-icon>
         </md-filled-text-field>
 
-        {/* 5 – alkohol */}
         <div class="question">Konzumujete alkohol? Ak áno, v akom množstve a ako často?</div>
-        <md-filled-text-field
+        <md-filled-text-field required
           disabled={disabled}
           value={this.entry?.questions?.[5] ?? ''}
           oninput={(ev: InputEvent) => {
@@ -159,9 +165,8 @@ export class AndelProjectQDetail {
           <md-icon slot="leading-icon">local_bar</md-icon>
         </md-filled-text-field>
 
-        {/* 6 – súčasná liečba */}
         <div class="question">Podstupujete momentálne nejakú fyzioterapiu, psychoterapiu alebo inú liečbu?</div>
-        <md-filled-text-field
+        <md-filled-text-field required
           disabled={disabled}
           value={this.entry?.questions?.[6] ?? ''}
           oninput={(ev: InputEvent) => {
@@ -171,9 +176,8 @@ export class AndelProjectQDetail {
           <md-icon slot="leading-icon">favorite</md-icon>
         </md-filled-text-field>
 
-        {/* 7 – ďalšie poznámky */}
         <div class="question">Je niečo ďalšie, čo by mohlo byť dôležité vedieť?</div>
-        <md-filled-text-field
+        <md-filled-text-field required
           disabled={disabled}
           value={this.entry?.questions?.[7] ?? ''}
           oninput={(ev: InputEvent) => {
@@ -188,7 +192,7 @@ export class AndelProjectQDetail {
         <md-divider></md-divider>
 
         <div class="actions">
-          <md-filled-tonal-button id="delete" disabled={ !this.entry }
+          <md-filled-tonal-button id="delete" disabled={!this.entry || this.entry?.id === "@new" }
             onClick={() => this.deleteEntry()} >
             <md-icon slot="icon">delete</md-icon>
             Zmazať
@@ -256,13 +260,17 @@ export class AndelProjectQDetail {
 
   private async updateEntry() {
     try {
+      this.entry.lastModified = new Date(Date.now());
+
       const configuration = new Configuration({
         basePath: this.apiBase,
       });
 
       const waitingListApi = new QuestionnaireApi(configuration);
 
-      const response = await waitingListApi.updateQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, entryId: this.entryId, questionnaire: this.entry});
+      const response = this.entryId == "@new" ?
+      await waitingListApi.createQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, questionnaire: this.entry}) :
+      await waitingListApi.updateQuestionnaireEntryRaw({ambulanceId: this.ambulanceId, entryId: this.entryId, questionnaire: this.entry});
 
       if (response.raw.status < 299) {
         this.editorClosed.emit("store")
