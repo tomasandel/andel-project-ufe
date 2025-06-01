@@ -42,7 +42,7 @@ export class AndelProjectQList {
     return (
       <Host>
         {this.errorMessage
-        ? <div class="error">{this.errorMessage}</div>
+        ? <div class="error">error: {this.errorMessage}</div>
         :
         <md-list>
             {this.questionnaires.map((patient) =>
